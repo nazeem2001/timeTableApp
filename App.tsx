@@ -17,7 +17,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import * as eva from '@eva-design/eva';
 import {createStackNavigator} from '@react-navigation/stack';
-import {HomeScreen} from './components/home';
+import {HomeScreen} from './components/HomeScreen';
 import {EditLinkScreen} from './components/editLink';
 
 /**

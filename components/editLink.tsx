@@ -6,6 +6,7 @@ import React from 'react';
 import {TopNavigationTitleShowcase} from './TopNav';
 import {Button} from '@ui-kitten/components';
 import {NetworkUtils, fetchFormatData, saveDataLocal} from '../commonFunctions';
+import {Logo} from './logo';
 
 export const EditLinkScreen = props => {
   const LoadingIndicator = (props: ImageProps): React.ReactElement => (
@@ -88,6 +89,9 @@ export const EditLinkScreen = props => {
           accessoryRight={isLoading ? LoadingIndicator : () => <></>}>
           Update Link
         </Button>
+      </Layout>
+      <Layout style={{position: 'absolute', bottom: 0, width: '100%'}}>
+        <Logo />
       </Layout>
     </>
   );

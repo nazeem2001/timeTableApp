@@ -7,11 +7,11 @@ import {
   SelectItem,
   Text,
 } from '@ui-kitten/components';
-import {Alert, ToastAndroid, StyleSheet, View} from 'react-native';
+import {Alert, ToastAndroid, View, StyleSheet} from 'react-native';
 import {TopNavigationTitleShowcase} from './TopNav';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {SetStateAction, useEffect, useRef, useState} from 'react';
 import {
   NetworkUtils,
   fetchFormatData,
@@ -21,6 +21,7 @@ import {
 } from '../commonFunctions';
 import {useScrollToTop} from '@react-navigation/native';
 import {Col, Grid, Row} from 'react-native-easy-grid';
+import {Logo} from './logo';
 
 export const HomeScreen = props => {
   const [Load, _] = useState<boolean>(false);
@@ -30,6 +31,10 @@ export const HomeScreen = props => {
   const [coueseList, SetCoueseList] = useState<string[]>([]);
   const [coueseIndex, SetCoueseIndex] = useState<IndexPath | undefined>();
   const [brachList, SetBrachList] = useState<string[]>([]);
+  const [semList, SetSemList] = useState<string[]>([]);
+  const [semIndex, SetSemIndex] = useState<IndexPath | undefined>();
+  const [accYearList, SetAccYearList] = useState<string[]>([]);
+  const [accYearIndex, SetAccYearIndex] = useState<IndexPath | undefined>();
   const [brachIndex, SetBrachIndex] = useState<IndexPath | undefined>();
   const [YearList, SetYearList] = useState<string[]>([]);
   const [YearIndex, SetYearIndex] = useState<IndexPath | undefined>();
@@ -60,6 +65,18 @@ export const HomeScreen = props => {
         );
         // await AsyncStorage.clear();
       }
+      await setOptions();
+      // SetCoueseList(data.mao)
+    } else {
+      Alert.alert('Error', 'no google sheet link available please update now', [
+        {
+          text: 'Ok',
+          onPress: () => props.navigation.navigate('editLink'),
+        },
+      ]);
+    }
+
+    async function setOptions() {
       const ldata = await getLocalData();
 
       const LDataJson = JSON.parse(ldata);
@@ -72,14 +89,8 @@ export const HomeScreen = props => {
       SetTimeList(removeDuplicate(LDataJson.map(v => v.timings)));
       SetYearList(removeDuplicate(LDataJson.map(v => v.year)));
       SetVenueList(removeDuplicate(LDataJson.map(v => v.venue)));
-      // SetCoueseList(data.mao)
-    } else {
-      Alert.alert('Error', 'no google sheet link available please update now', [
-        {
-          text: 'Ok',
-          onPress: () => props.navigation.navigate('editLink'),
-        },
-      ]);
+      SetSemList(removeDuplicate(LDataJson.map(v => v.sem)));
+      SetAccYearList(removeDuplicate(LDataJson.map(v => v.ay)));
     }
   };
 
@@ -92,6 +103,8 @@ export const HomeScreen = props => {
     SetYearIndex(undefined);
     SetTimeIndex(undefined);
     SetVenueIndex(undefined);
+    SetAccYearIndex(undefined);
+    SetSemIndex(undefined);
     setShowResult(false);
     // useScrollToTop(ref);
   }
@@ -103,33 +116,51 @@ export const HomeScreen = props => {
     DayIndex,
     YearIndex,
     TimeIndex,
+    accYearIndex,
+    semIndex,
     VenueIndex,
   ]);
 
   function validateInput(): void {
     setSubmitEnable(false);
-    console.log({DayIndex, TimeIndex});
-    if (DayIndex && TimeIndex) {
+    console.log({
+      DayIndex,
+      TimeIndex,
+      accYearIndex,
+      YearIndex,
+      brachIndex,
+      coueseIndex,
+      RoomNoIndex,
+      semIndex,
+      VenueIndex,
+      mode,
+    });
+    if (DayIndex && TimeIndex && accYearIndex && semIndex) {
       if (YearIndex || brachIndex || coueseIndex) {
         if (mode == 2) {
           ToastAndroid.show('camnot use both', ToastAndroid.LONG);
           SetYearIndex(undefined);
           SetBrachIndex(undefined);
+          console.log('no m1');
         } else {
           if (YearIndex && brachIndex && coueseIndex) {
             setSubmitEnable(true);
             Setmode(1);
+            console.log('m1');
           }
         }
       }
       if (RoomNoIndex || VenueIndex) {
         if (mode == 1) {
-          ToastAndroid.show('camnot use both', ToastAndroid.LONG);
+          ToastAndroid.show('Cannot use both', ToastAndroid.LONG);
           SetRoomNoIndex(undefined);
+          SetVenueIndex(undefined);
+          console.log('no m2');
         } else {
           if (RoomNoIndex && VenueIndex) {
             setSubmitEnable(true);
             Setmode(2);
+            console.log('m2');
           }
         }
       }
@@ -142,7 +173,10 @@ export const HomeScreen = props => {
   }
   useEffect(startupSync, [Load]);
   function submit() {
-    if (mode == 0) return;
+    if (mode == 0) {
+      return;
+    }
+    console.log(mode);
     if (mode == 1) {
       let Rdata = data.find(
         v =>
@@ -150,6 +184,8 @@ export const HomeScreen = props => {
           v.day === DayList[DayIndex?.row] &&
           v.timings === TimeList[TimeIndex?.row] &&
           v.year === YearList[YearIndex?.row] &&
+          v.ay === accYearList[accYearIndex?.row] &&
+          v.sem === semList[semIndex?.row] &&
           v.branch === brachList[brachIndex?.row],
       );
       console.log(
@@ -162,7 +198,7 @@ export const HomeScreen = props => {
       );
       SetResult([
         {label: 'Subject', value: Rdata?.subjectName ?? 'No Class'},
-        {label: 'Faculty Member', value: Rdata?.facultyName ?? 'No Class'},
+        {label: 'Faculty', value: Rdata?.facultyName ?? 'No Class'},
         {label: 'Room No', value: Rdata?.rNo ?? 'No Class'},
         {label: 'Venue', value: Rdata?.venue ?? 'No Class'},
       ]);
@@ -176,12 +212,14 @@ export const HomeScreen = props => {
         v =>
           v.venue === VenueList[VenueIndex?.row] &&
           v.day === DayList[DayIndex?.row] &&
+          v.ay === accYearList[accYearIndex?.row] &&
+          v.sem === semList[semIndex?.row] &&
           v.timings === TimeList[TimeIndex?.row] &&
           v.rNo === RoomNoList[RoomNoIndex?.row],
       );
       SetResult([
         {label: 'Subject', value: Rdata?.subjectName ?? 'No Class'},
-        {label: 'Faculty Member', value: Rdata?.facultyName ?? 'No Class'},
+        {label: 'Faculty', value: Rdata?.facultyName ?? 'No Class'},
         {label: 'Year', value: Rdata?.year ?? 'No Class'},
         {label: 'Branch', value: Rdata?.branch ?? 'No Class'},
         {label: 'Course', value: Rdata?.course ?? 'No Class'},
@@ -198,7 +236,7 @@ export const HomeScreen = props => {
       <ScrollView ref={ref}>
         <Layout style={styles.container}>
           <Card style={styles.card}>
-            <Layout style={styles.card}>
+            <Layout style={styles.layout}>
               <Select
                 style={{width: '50%', paddingRight: '5%'}}
                 placeholder={'Day'}
@@ -226,9 +264,52 @@ export const HomeScreen = props => {
                 ))}
               </Select>
             </Layout>
+            <Layout style={styles.layout}>
+              <Select
+                style={{width: '110%'}}
+                placeholder={'Academic Year'}
+                label={'Select Academic Year'}
+                value={accYearIndex ? accYearList[accYearIndex.row] : undefined}
+                onSelect={(i: SetStateAction<IndexPath>) => {
+                  SetAccYearIndex(i);
+                }}
+                selectedIndex={accYearIndex}>
+                {accYearList.map((c, k) => (
+                  <SelectItem title={c} key={k} />
+                ))}
+              </Select>
+            </Layout>
           </Card>
           <Card style={styles.card}>
-            <Layout style={styles.card}>
+            <Layout style={styles.layout}>
+              <Select
+                style={{width: '55%', paddingRight: '5%'}}
+                placeholder={'Branch'}
+                label={'Select Branch'}
+                value={brachIndex ? brachList[brachIndex.row] : undefined}
+                onSelect={i => {
+                  SetBrachIndex(i);
+                }}
+                selectedIndex={brachIndex}>
+                {brachList.map((c, k) => (
+                  <SelectItem title={c} key={k} />
+                ))}
+              </Select>
+              <Select
+                style={{width: '55%'}}
+                placeholder={'Semester'}
+                label={'Select Semester'}
+                value={semIndex ? semList[semIndex.row] : undefined}
+                onSelect={(i: SetStateAction<IndexPath>) => {
+                  SetSemIndex(i);
+                }}
+                selectedIndex={semIndex}>
+                {semList.map((c, k) => (
+                  <SelectItem title={c} key={k} />
+                ))}
+              </Select>
+            </Layout>
+            <Layout style={{...styles.layout, marginBottom: 23}}>
               <Select
                 style={{width: '55%', paddingRight: '5%'}}
                 placeholder={'Year'}
@@ -244,31 +325,19 @@ export const HomeScreen = props => {
               </Select>
               <Select
                 style={{width: '55%'}}
-                placeholder={'Branch'}
-                label={'Select Branch'}
-                value={brachIndex ? brachList[brachIndex.row] : undefined}
+                placeholder={'Course'}
+                label={'Select Course'}
+                value={coueseIndex ? coueseList[coueseIndex.row] : undefined}
                 onSelect={i => {
-                  SetBrachIndex(i);
+                  SetCoueseIndex(i);
                 }}
-                selectedIndex={brachIndex}>
-                {brachList.map((c, k) => (
+                selectedIndex={coueseIndex}>
+                {coueseList.map((c, k) => (
                   <SelectItem title={c} key={k} />
                 ))}
               </Select>
             </Layout>
-            <Select
-              style={{width: '100%', marginTop: 20, marginBottom: 21}}
-              placeholder={'Course'}
-              label={'Select Course'}
-              value={coueseIndex ? coueseList[coueseIndex.row] : undefined}
-              onSelect={i => {
-                SetCoueseIndex(i);
-              }}
-              selectedIndex={coueseIndex}>
-              {coueseList.map((c, k) => (
-                <SelectItem title={c} key={k} />
-              ))}
-            </Select>
+
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
               <View>
@@ -276,7 +345,7 @@ export const HomeScreen = props => {
               </View>
               <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
             </View>
-            <Layout style={styles.card}>
+            <Layout style={styles.layout}>
               <Select
                 style={{width: '55%', paddingRight: '5%'}}
                 placeholder={'Room.No'}
@@ -304,6 +373,21 @@ export const HomeScreen = props => {
                 ))}
               </Select>
             </Layout>
+            <Layout style={styles.layout}>
+              <Select
+                style={{width: '110%'}}
+                placeholder={'Semester'}
+                label={'Select Semester'}
+                value={semIndex ? semList[semIndex.row] : undefined}
+                onSelect={(i: SetStateAction<IndexPath>) => {
+                  SetSemIndex(i);
+                }}
+                selectedIndex={semIndex}>
+                {semList.map((c, k) => (
+                  <SelectItem title={c} key={k} />
+                ))}
+              </Select>
+            </Layout>
           </Card>
           <Layout style={styles.buttonContainer}>
             <Button
@@ -323,7 +407,7 @@ export const HomeScreen = props => {
               <Grid>
                 {result.map((t, i) => (
                   <Row key={i} style={{marginBottom: '2%'}}>
-                    <Col>
+                    <Col style={{width: '25%'}}>
                       <Text>{t.label}</Text>
                     </Col>
                     <Col>
@@ -337,6 +421,7 @@ export const HomeScreen = props => {
             <></>
           )}
         </Layout>
+        <Logo />
       </ScrollView>
     </>
   );
@@ -371,6 +456,15 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     marginTop: 34,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'space-between',
+    width: '90%',
+    height: '90%',
+  },
+  layout: {
+    flex: 1,
+    marginTop: 13,
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'space-between',
