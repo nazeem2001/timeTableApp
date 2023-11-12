@@ -48,15 +48,26 @@ export const HomeScreen = props => {
   const [DayIndex, SetDayIndex] = useState<IndexPath | undefined>();
   const [result, SetResult] = useState<{label: string; value: string}[]>([]);
   const [mode, Setmode] = useState<number>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const ref = React.useRef(null);
+  useEffect(() => {
+    let maxV: number = 0;
+    for (let i = 0; i < accYearList.length; i++) {
+      if (accYearList[i] > accYearList[maxV]) maxV = i;
+    }
+    SetAccYearIndex(new IndexPath(maxV));
+  }, [accYearList]);
   const startUp = async () => {
     const link = await AsyncStorage.getItem('link');
     if (link) {
       const isNetworkAvailable = await NetworkUtils.isNetworkAvailable();
       const linkJSON = JSON.parse(link);
+      await setOptions();
       if (isNetworkAvailable) {
+        setIsLoading(true);
         const Data = await fetchFormatData(linkJSON);
+
         await saveDataLocal(Data);
       } else {
         ToastAndroid.show(
@@ -66,6 +77,7 @@ export const HomeScreen = props => {
         // await AsyncStorage.clear();
       }
       await setOptions();
+      setIsLoading(false);
       // SetCoueseList(data.mao)
     } else {
       Alert.alert('Error', 'no google sheet link available please update now', [
@@ -137,7 +149,7 @@ export const HomeScreen = props => {
     });
     if (DayIndex && TimeIndex && accYearIndex && semIndex) {
       if (YearIndex || brachIndex || coueseIndex) {
-        if (mode == 2) {
+        if (mode === 2) {
           ToastAndroid.show('camnot use both', ToastAndroid.LONG);
           SetYearIndex(undefined);
           SetBrachIndex(undefined);
@@ -151,7 +163,7 @@ export const HomeScreen = props => {
         }
       }
       if (RoomNoIndex || VenueIndex) {
-        if (mode == 1) {
+        if (mode === 1) {
           ToastAndroid.show('Cannot use both', ToastAndroid.LONG);
           SetRoomNoIndex(undefined);
           SetVenueIndex(undefined);
@@ -173,7 +185,7 @@ export const HomeScreen = props => {
   }
   useEffect(startupSync, [Load]);
   function submit() {
-    if (mode == 0) {
+    if (mode === 0) {
       return;
     }
     console.log(mode);
@@ -232,10 +244,25 @@ export const HomeScreen = props => {
   }
   return (
     <>
-      <TopNavigationTitleShowcase navigation={props} />
+      <TopNavigationTitleShowcase navigation={props} isLoading={isLoading} />
       <ScrollView ref={ref}>
         <Layout style={styles.container}>
           <Card style={styles.card}>
+            <Layout style={styles.layout}>
+              <Select
+                style={{width: '110%'}}
+                placeholder={'Academic Year'}
+                label={'Select Academic Year'}
+                value={accYearIndex ? accYearList[accYearIndex.row] : undefined}
+                onSelect={(i: SetStateAction<IndexPath>) => {
+                  SetAccYearIndex(i);
+                }}
+                selectedIndex={accYearIndex}>
+                {accYearList.map((c, k) => (
+                  <SelectItem title={c} key={k} />
+                ))}
+              </Select>
+            </Layout>
             <Layout style={styles.layout}>
               <Select
                 style={{width: '50%', paddingRight: '5%'}}
@@ -264,34 +291,19 @@ export const HomeScreen = props => {
                 ))}
               </Select>
             </Layout>
-            <Layout style={styles.layout}>
-              <Select
-                style={{width: '110%'}}
-                placeholder={'Academic Year'}
-                label={'Select Academic Year'}
-                value={accYearIndex ? accYearList[accYearIndex.row] : undefined}
-                onSelect={(i: SetStateAction<IndexPath>) => {
-                  SetAccYearIndex(i);
-                }}
-                selectedIndex={accYearIndex}>
-                {accYearList.map((c, k) => (
-                  <SelectItem title={c} key={k} />
-                ))}
-              </Select>
-            </Layout>
           </Card>
           <Card style={styles.card}>
             <Layout style={styles.layout}>
               <Select
                 style={{width: '55%', paddingRight: '5%'}}
-                placeholder={'Branch'}
-                label={'Select Branch'}
-                value={brachIndex ? brachList[brachIndex.row] : undefined}
+                placeholder={'Year'}
+                label={'Select Year'}
+                value={YearIndex ? YearList[YearIndex.row] : undefined}
                 onSelect={i => {
-                  SetBrachIndex(i);
+                  SetYearIndex(i);
                 }}
-                selectedIndex={brachIndex}>
-                {brachList.map((c, k) => (
+                selectedIndex={YearIndex}>
+                {YearList.map((c, k) => (
                   <SelectItem title={c} key={k} />
                 ))}
               </Select>
@@ -312,19 +324,6 @@ export const HomeScreen = props => {
             <Layout style={{...styles.layout, marginBottom: 23}}>
               <Select
                 style={{width: '55%', paddingRight: '5%'}}
-                placeholder={'Year'}
-                label={'Select Year'}
-                value={YearIndex ? YearList[YearIndex.row] : undefined}
-                onSelect={i => {
-                  SetYearIndex(i);
-                }}
-                selectedIndex={YearIndex}>
-                {YearList.map((c, k) => (
-                  <SelectItem title={c} key={k} />
-                ))}
-              </Select>
-              <Select
-                style={{width: '55%'}}
                 placeholder={'Course'}
                 label={'Select Course'}
                 value={coueseIndex ? coueseList[coueseIndex.row] : undefined}
@@ -333,6 +332,19 @@ export const HomeScreen = props => {
                 }}
                 selectedIndex={coueseIndex}>
                 {coueseList.map((c, k) => (
+                  <SelectItem title={c} key={k} />
+                ))}
+              </Select>
+              <Select
+                style={{width: '55%'}}
+                placeholder={'Branch'}
+                label={'Select Branch'}
+                value={brachIndex ? brachList[brachIndex.row] : undefined}
+                onSelect={i => {
+                  SetBrachIndex(i);
+                }}
+                selectedIndex={brachIndex}>
+                {brachList.map((c, k) => (
                   <SelectItem title={c} key={k} />
                 ))}
               </Select>
@@ -421,7 +433,9 @@ export const HomeScreen = props => {
             <></>
           )}
         </Layout>
+        {/* <Layout style={{paddingBottom: 50}}> */}
         <Logo />
+        {/* </Layout> */}
       </ScrollView>
     </>
   );

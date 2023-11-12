@@ -6,6 +6,7 @@ import {
   IconElement,
   MenuItem,
   OverflowMenu,
+  Spinner,
   Text,
   TopNavigation,
   TopNavigationAction,
@@ -22,6 +23,7 @@ const editIcon = (props): IconElement => <Icon {...props} name="edit" />;
 
 export const TopNavigationTitleShowcase = ({
   navigation,
+  isLoading,
 }): React.ReactElement => {
   const [menuVisible, setMenuVisible] = React.useState(false);
 
@@ -48,12 +50,20 @@ export const TopNavigationTitleShowcase = ({
   );
 
   const renderOverflowMenuAction = (): React.ReactElement => (
-    <OverflowMenu
-      anchor={renderMenuAction}
-      visible={menuVisible}
-      onBackdropPress={toggleMenu}>
-      <MenuItem accessoryLeft={editIcon} title="edit" onPress={goToEditLink} />
-    </OverflowMenu>
+    <>
+      {isLoading && <Spinner size="small" status="success" />}
+      {isLoading}
+      <OverflowMenu
+        anchor={renderMenuAction}
+        visible={menuVisible}
+        onBackdropPress={toggleMenu}>
+        <MenuItem
+          accessoryLeft={editIcon}
+          title="edit"
+          onPress={goToEditLink}
+        />
+      </OverflowMenu>
+    </>
   );
 
   const renderTitle = (): React.ReactElement => (

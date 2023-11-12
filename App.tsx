@@ -19,6 +19,7 @@ import * as eva from '@eva-design/eva';
 import {createStackNavigator} from '@react-navigation/stack';
 import {HomeScreen} from './components/HomeScreen';
 import {EditLinkScreen} from './components/editLink';
+import {myTheme} from './custom-theme';
 
 /**
  * Use any valid `name` property from eva icons (e.g `github`, or `heart-outline`)
@@ -28,7 +29,7 @@ const Stack = createStackNavigator();
 export default (): React.ReactElement => (
   <>
     <IconRegistry icons={EvaIconsPack} />
-    <ApplicationProvider {...eva} theme={eva.light}>
+    <ApplicationProvider {...eva} theme={{...eva.light, ...myTheme}}>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{headerShown: false}}
