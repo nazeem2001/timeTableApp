@@ -7,6 +7,7 @@ import {TopNavigationTitleShowcase} from './TopNav';
 import {Button} from '@ui-kitten/components';
 import {NetworkUtils, fetchFormatData, saveDataLocal} from '../commonFunctions';
 import {Logo} from './logo';
+import {CommonActions} from '@react-navigation/native';
 
 export const EditLinkScreen = props => {
   const LoadingIndicator = (props: ImageProps): React.ReactElement => (
@@ -49,7 +50,12 @@ export const EditLinkScreen = props => {
     if (data.success) {
       // data.table.shift();
       saveDataLocal(data);
-      props.navigation.push('Home');
+      props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Home'}],
+        }),
+      );
     } else {
       Alert.alert('Error', data.resson, [
         {

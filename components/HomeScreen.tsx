@@ -266,7 +266,11 @@ export const HomeScreen = props => {
               }}
             />
           )}
-          <Card style={{...styles.card, marginTop: 20}}>
+          <Card
+            style={{
+              ...styles.card,
+              marginTop: !!logoLink ? 20 : styles.card.marginTop,
+            }}>
             <Layout style={styles.layout}>
               <Select
                 style={{width: '110%'}}
