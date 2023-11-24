@@ -12,7 +12,7 @@ export const Logo = prop => {
         paddingBottom: '6%',
       }}>
       <Text category="p2">powered by</Text>
-      <Image source={MYLogo} />
+      <Image source={MYLogo} style={{height: 20, resizeMode: 'contain'}} />
     </Layout>
   );
 };

@@ -7,7 +7,7 @@ import {
   SelectItem,
   Text,
 } from '@ui-kitten/components';
-import {Alert, ToastAndroid, View, StyleSheet} from 'react-native';
+import {Alert, ToastAndroid, View, StyleSheet, Image} from 'react-native';
 import {TopNavigationTitleShowcase} from './TopNav';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -48,13 +48,16 @@ export const HomeScreen = props => {
   const [DayIndex, SetDayIndex] = useState<IndexPath | undefined>();
   const [result, SetResult] = useState<{label: string; value: string}[]>([]);
   const [mode, Setmode] = useState<number>();
+  const [logoLink, setLogoLink] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const ref = React.useRef(null);
   useEffect(() => {
     let maxV: number = 0;
     for (let i = 0; i < accYearList.length; i++) {
-      if (accYearList[i] > accYearList[maxV]) maxV = i;
+      if (accYearList[i] > accYearList[maxV]) {
+        maxV = i;
+      }
     }
     SetAccYearIndex(new IndexPath(maxV));
   }, [accYearList]);
@@ -94,13 +97,16 @@ export const HomeScreen = props => {
       const LDataJson = JSON.parse(ldata);
       console.log(LDataJson[1]);
       SetData(LDataJson);
+      setLogoLink(
+        removeDuplicate(LDataJson.map(v => v.logoLink)).find(v => !!v) ?? '',
+      );
       SetCoueseList(removeDuplicate(LDataJson.map(v => v.course)));
-      SetBrachList(removeDuplicate(LDataJson.map(v => v.branch)));
+      SetBrachList(removeDuplicate(LDataJson.map(v => v.branch)).sort());
       SetDayList(removeDuplicate(LDataJson.map(v => v.day)));
-      SetRoomNoList(removeDuplicate(LDataJson.map(v => v.rNo)));
+      SetRoomNoList(removeDuplicate(LDataJson.map(v => v.rNo)).sort());
       SetTimeList(removeDuplicate(LDataJson.map(v => v.timings)));
       SetYearList(removeDuplicate(LDataJson.map(v => v.year)));
-      SetVenueList(removeDuplicate(LDataJson.map(v => v.venue)));
+      SetVenueList(removeDuplicate(LDataJson.map(v => v.venue)).sort());
       SetSemList(removeDuplicate(LDataJson.map(v => v.sem)));
       SetAccYearList(removeDuplicate(LDataJson.map(v => v.ay)));
     }
@@ -247,7 +253,20 @@ export const HomeScreen = props => {
       <TopNavigationTitleShowcase navigation={props} isLoading={isLoading} />
       <ScrollView ref={ref}>
         <Layout style={styles.container}>
-          <Card style={styles.card}>
+          {!!logoLink && (
+            <Image
+              source={{
+                uri: logoLink,
+              }}
+              style={{
+                width: '100%',
+                height: 110,
+                resizeMode: 'contain',
+                marginTop: 10,
+              }}
+            />
+          )}
+          <Card style={{...styles.card, marginTop: 20}}>
             <Layout style={styles.layout}>
               <Select
                 style={{width: '110%'}}
@@ -296,34 +315,6 @@ export const HomeScreen = props => {
             <Layout style={styles.layout}>
               <Select
                 style={{width: '55%', paddingRight: '5%'}}
-                placeholder={'Year'}
-                label={'Select Year'}
-                value={YearIndex ? YearList[YearIndex.row] : undefined}
-                onSelect={i => {
-                  SetYearIndex(i);
-                }}
-                selectedIndex={YearIndex}>
-                {YearList.map((c, k) => (
-                  <SelectItem title={c} key={k} />
-                ))}
-              </Select>
-              <Select
-                style={{width: '55%'}}
-                placeholder={'Semester'}
-                label={'Select Semester'}
-                value={semIndex ? semList[semIndex.row] : undefined}
-                onSelect={(i: SetStateAction<IndexPath>) => {
-                  SetSemIndex(i);
-                }}
-                selectedIndex={semIndex}>
-                {semList.map((c, k) => (
-                  <SelectItem title={c} key={k} />
-                ))}
-              </Select>
-            </Layout>
-            <Layout style={{...styles.layout, marginBottom: 23}}>
-              <Select
-                style={{width: '55%', paddingRight: '5%'}}
                 placeholder={'Course'}
                 label={'Select Course'}
                 value={coueseIndex ? coueseList[coueseIndex.row] : undefined}
@@ -345,6 +336,35 @@ export const HomeScreen = props => {
                 }}
                 selectedIndex={brachIndex}>
                 {brachList.map((c, k) => (
+                  <SelectItem title={c} key={k} />
+                ))}
+              </Select>
+            </Layout>
+
+            <Layout style={{...styles.layout, marginBottom: 23}}>
+              <Select
+                style={{width: '55%', paddingRight: '5%'}}
+                placeholder={'Year'}
+                label={'Select Year'}
+                value={YearIndex ? YearList[YearIndex.row] : undefined}
+                onSelect={i => {
+                  SetYearIndex(i);
+                }}
+                selectedIndex={YearIndex}>
+                {YearList.map((c, k) => (
+                  <SelectItem title={c} key={k} />
+                ))}
+              </Select>
+              <Select
+                style={{width: '55%'}}
+                placeholder={'Semester'}
+                label={'Select Semester'}
+                value={semIndex ? semList[semIndex.row] : undefined}
+                onSelect={(i: SetStateAction<IndexPath>) => {
+                  SetSemIndex(i);
+                }}
+                selectedIndex={semIndex}>
+                {semList.map((c, k) => (
                   <SelectItem title={c} key={k} />
                 ))}
               </Select>
