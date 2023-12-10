@@ -39,7 +39,7 @@ const ResultPage2 = ({navigation, route}: PageProps<'result2'>) => {
       <Text category="h6" style={{marginLeft: '10%', marginBottom: '5%'}}>
         {route.params?.FacultyName}
       </Text>
-      <Animatable.View style={{flexDirection: 'row'}} animation={'fadeInDown'}>
+      <Animatable.View style={{width: '100%'}} animation={'fadeInDown'}>
         <Layout style={{width: '95%', alignSelf: 'center'}}>
           {route.params?.data.map((day, i) => (
             <Layout
@@ -84,17 +84,11 @@ const ResultPage2 = ({navigation, route}: PageProps<'result2'>) => {
                   <TouchableOpacity
                     key={Math.random()}
                     onPress={() => {
-                      // Alert.alert('Error', JSON.stringify(period), [
-                      //   {
-                      //     text: 'Ok',
-                      //   },
-                      // ]);
                       setActiveSections([]);
                       setModelData(period);
                       setModelVisble(true);
                     }}
                     style={{
-                      //   height: '100%',
                       flex: 1,
                       margin: '1%',
                       marginBottom: 0,
@@ -118,14 +112,15 @@ const ResultPage2 = ({navigation, route}: PageProps<'result2'>) => {
           <DataGrid data={modelData} />
         </Card>
       </Modal>
-      {/* <Text>{JSON.stringify(route.params?.data)} </Text> */}
-      {/* <SafeAreaView style={[{flex: 19}, scrollDimensions]}> */}
       <View style={styles.container}>
-        <ScrollView>
-          {/* <View style={{alignItems: 'center'}}> */}
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}>
           <Card
             style={{
-              flex: 1,
               width: '95%',
               alignSelf: 'center',
               marginTop: 18,
@@ -136,14 +131,12 @@ const ResultPage2 = ({navigation, route}: PageProps<'result2'>) => {
               activeSections={activeSections}
               setActiveSections={setActiveSections}></CustomAaccordian>
           </Card>
-          {/* </View> */}
 
-          <Layout style={{width: '100%', marginTop: 89}}>
+          <Layout style={{width: '100%'}}>
             <Logo />
           </Layout>
         </ScrollView>
       </View>
-      {/* </SafeAreaView> */}
     </Layout>
   );
 };
@@ -153,6 +146,7 @@ export default ResultPage2;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     //
   },
   footerContainer: {

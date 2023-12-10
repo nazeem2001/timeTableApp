@@ -27,10 +27,14 @@ const CustomAaccordian = (props: CustomAaccordianProps) => {
   }
   function renderHeader(section: resultType2[], _, isActive) {
     return (
-      <Animatable.View style={{flexDirection: 'row'}} animation={'fadeInDown'}>
-        <Text
-          category="h6"
-          style={{marginBottom: 4, marginRight: '45%', flex: 1}}>
+      <Animatable.View
+        style={{
+          flexDirection: 'row',
+          width: '120%',
+          justifyContent: 'space-between',
+        }}
+        animation={'fadeInDown'}>
+        <Text category="h6" style={{marginBottom: 4, flex: 1}}>
           {section[0].day}
         </Text>
         <Animatable.Image

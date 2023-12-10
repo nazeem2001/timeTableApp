@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Image,
   ImageSourcePropType,
+  View,
 } from 'react-native';
 import {TopNavigationTitleShowcase} from './TopNav';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -183,32 +184,34 @@ export const HomeScreen = (props: PageProps<'Home'>) => {
       FacultyIndex,
       mode,
     });
-    if (DayIndex && TimeIndex && accYearIndex && semIndex) {
-      if (YearIndex || branchIndex || courseIndex) {
-        if (mode === 2) {
-          ToastAndroid.show('camnot use both', ToastAndroid.LONG);
-          SetYearIndex(undefined);
-          SetBranchIndex(undefined);
-          console.log('no m1');
-        } else {
-          if (YearIndex && branchIndex && courseIndex) {
-            setSubmitEnable(true);
-            Setmode(1);
-            console.log('m1');
+    if (mode === 1 || mode === 2) {
+      if (DayIndex && TimeIndex && accYearIndex && semIndex) {
+        if (YearIndex || branchIndex || courseIndex) {
+          if (mode === 2) {
+            ToastAndroid.show('camnot use both', ToastAndroid.LONG);
+            SetYearIndex(undefined);
+            SetBranchIndex(undefined);
+            console.log('no m1');
+          } else {
+            if (YearIndex && branchIndex && courseIndex) {
+              setSubmitEnable(true);
+              Setmode(1);
+              console.log('m1');
+            }
           }
         }
-      }
-      if (RoomNoIndex || VenueIndex) {
-        if (mode === 1) {
-          ToastAndroid.show('Cannot use both', ToastAndroid.LONG);
-          SetRoomNoIndex(undefined);
-          SetVenueIndex(undefined);
-          console.log('no m2');
-        } else {
-          if (RoomNoIndex && VenueIndex) {
-            setSubmitEnable(true);
-            Setmode(2);
-            console.log('m2');
+        if (RoomNoIndex || VenueIndex) {
+          if (mode === 1) {
+            ToastAndroid.show('Cannot use both', ToastAndroid.LONG);
+            SetRoomNoIndex(undefined);
+            SetVenueIndex(undefined);
+            console.log('no m2');
+          } else {
+            if (RoomNoIndex && VenueIndex) {
+              setSubmitEnable(true);
+              Setmode(2);
+              console.log('m2');
+            }
           }
         }
       }
@@ -404,7 +407,14 @@ export const HomeScreen = (props: PageProps<'Home'>) => {
   return (
     <>
       <TopNavigationTitleShowcase navigation={props} isLoading={isLoading} />
-      <ScrollView ref={ref}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          flexDirection: 'column',
+          backgroundColor: '#ffffff',
+          justifyContent: 'space-between',
+        }}
+        ref={ref}>
         <Layout style={styles.container}>
           {!!logoLink && (
             <Image
@@ -456,9 +466,9 @@ export const HomeScreen = (props: PageProps<'Home'>) => {
             <></>
           )}
         </Layout>
-        {/* <Layout style={{paddingBottom: 50}}> */}
-        <Logo />
-        {/* </Layout> */}
+        <View style={{position: 'relative', bottom: 0}}>
+          <Logo />
+        </View>
       </ScrollView>
     </>
   );
@@ -469,18 +479,16 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     width: '90%',
-    marginBottom: '40%',
+    marginBottom: '30%',
   },
   buttonContainer: {
     width: '90%',
     marginTop: '10%',
     marginBottom: '20%',
-    flex: 1,
     flexDirection: 'row-reverse',
     alignContent: 'flex-end',
   },
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

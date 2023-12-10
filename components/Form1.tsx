@@ -1,6 +1,6 @@
-import {Layout, IndexPath, Card} from '@ui-kitten/components';
+import {Layout, IndexPath, Text, Card} from '@ui-kitten/components';
 import * as React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
 import SelectComponent from './SelectComp';
 
