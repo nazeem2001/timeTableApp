@@ -38,7 +38,7 @@ function camelCase(str) {
 export const formatFetchedData = (data: any) => {
   if (data.success) {
     const colNames: string[] = data.data.table.cols.map(
-      (col: {label: string}) => camelCase(col.label)
+      (col: {label: string}) => camelCase(col.label),
     );
     const table = data.data.table?.rows?.map((row: {c: any[]}) => {
       let v = {};
@@ -75,7 +75,9 @@ export const getLocalData = () => {
   return data;
 };
 export const removeDuplicate = (list: string[]): string[] => {
-  return list.filter(function (item, pos) {
-    return list.indexOf(item) == pos;
-  });
+  return list
+    .filter(function (item, pos) {
+      return list.indexOf(item) === pos;
+    })
+    .filter(val => !!val);
 };
