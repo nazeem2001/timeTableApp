@@ -1,6 +1,6 @@
 import {Card, Text} from '@ui-kitten/components';
 import * as React from 'react';
-import {View, StyleProp, ViewStyle, StyleSheet} from 'react-native';
+import {StyleProp, ViewStyle, StyleSheet} from 'react-native';
 import {Grid, Row, Col} from 'react-native-easy-grid';
 import * as Animatable from 'react-native-animatable';
 

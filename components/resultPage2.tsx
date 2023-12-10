@@ -1,25 +1,10 @@
 import * as React from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  Image,
-  Dimensions,
-  SafeAreaView,
-} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {PageProps} from '../App';
 import {Button, Text, Card, Layout, Modal} from '@ui-kitten/components';
-import {Icon} from '@ui-kitten/components';
-import Accordion from 'react-native-collapsible/Accordion';
 import {resultType2} from '../constants';
-import {Col, Grid, Row} from 'react-native-easy-grid';
-import BOOK_LOGO from '../assrts/book.png';
-import CLOCK_LOGO from '../assrts/clock.png';
-import BUILDING_LOGO from '../assrts/building.png';
-import DOOR_LOGO from '../assrts/door.png';
 import DataGrid from './DataGrid';
 import CustomAaccordian from './customAccoordian';
 import {TopNavigationTitleShowcase} from './TopNav';

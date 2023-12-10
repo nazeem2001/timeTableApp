@@ -1,12 +1,11 @@
 import * as React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import {Button, Text, Card, Layout, Modal} from '@ui-kitten/components';
+import {StyleSheet} from 'react-native';
+import {Text, Card} from '@ui-kitten/components';
 import * as Animatable from 'react-native-animatable';
 import DOWN_ARROW from '../assrts/down.png';
 import {FacultyResultType, resultType2} from '../constants';
 import Accordion from 'react-native-collapsible/Accordion';
 import DataGrid from './DataGrid';
-import {View} from 'react-native';
 
 interface CustomAaccordianProps {
   data: FacultyResultType;

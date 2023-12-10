@@ -1,4 +1,3 @@
-import * as Animatable from 'react-native-animatable';
 import {Button, IndexPath, Layout, Text} from '@ui-kitten/components';
 import {
   Alert,
