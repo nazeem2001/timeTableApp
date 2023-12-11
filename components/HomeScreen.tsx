@@ -67,8 +67,9 @@ export const HomeScreen = (props: PageProps<'Home'>) => {
     opt = FormIndex?.row;
     if (opt == 1) {
       Setmode(3);
+      setShowResult(false);
     } else {
-      Setmode(1);
+      Setmode(0);
     }
   }, [FormIndex]);
   const ref = React.useRef(null);
@@ -140,7 +141,6 @@ export const HomeScreen = (props: PageProps<'Home'>) => {
   };
 
   function clearAll(): void {
-    Setmode(0);
     SetBranchIndex(undefined);
     SetCourseIndex(undefined);
     SetRoomNoIndex(undefined);

@@ -84,9 +84,11 @@ const ResultPage2 = ({navigation, route}: PageProps<'result2'>) => {
                   <TouchableOpacity
                     key={Math.random()}
                     onPress={() => {
-                      setActiveSections([]);
-                      setModelData(period);
-                      setModelVisble(true);
+                      if (typeof period === 'object') {
+                        setActiveSections([]);
+                        setModelData(period);
+                        setModelVisble(true);
+                      }
                     }}
                     style={{
                       flex: 1,
