@@ -170,28 +170,23 @@ const styles = StyleSheet.create({
   dropshadow: {
     flex: 1,
     margin: '.6%',
-    shadowOffset: {width: 3, height: 3.5},
+    shadowOffset: {width: 4, height: 4},
     shadowColor: '#171717',
     shadowOpacity: 0.9,
-    borderRadius: 10,
   },
   gridButtonActive: {
-    // elevation: 8,
     flex: 1,
     borderRadius: 10,
-    borderTopRightRadius: 15,
-
+    borderTopRightRadius: 12,
     marginBottom: 0,
     backgroundColor: '#ff4089',
   },
   gridButtonInActive: {
     flex: 1,
-
     marginBottom: 0,
     borderRadius: 10,
     backgroundColor: '#dcdedc',
   },
-
   footerContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',

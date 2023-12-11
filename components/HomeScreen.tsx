@@ -328,6 +328,8 @@ export const HomeScreen = (props: PageProps<'Home'>) => {
           venue: iteam.venue,
           roomNo: iteam.rNo,
           day: iteam.day,
+          branch: iteam.branch,
+          course: iteam.course,
         };
       });
       console.log(dataNav);

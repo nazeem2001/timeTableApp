@@ -8,7 +8,8 @@ import BOOK_LOGO from '../assrts/book.png';
 import CLOCK_LOGO from '../assrts/clock.png';
 import BUILDING_LOGO from '../assrts/building.png';
 import DOOR_LOGO from '../assrts/door.png';
-
+import COURSE_LOGO from '../assrts/course.png';
+import BRANCH_LOGO from '../assrts/branch.gif';
 interface DataGridProps {
   data: resultType2;
 }
@@ -35,6 +36,16 @@ const DataGrid = (props: DataGridProps) => {
           <Col style={styles.column}>
             <Image source={DOOR_LOGO} style={styles.logoImg} />
             <Text style={styles.cardText}>{props.data.roomNo}</Text>
+          </Col>
+        </Row>
+        <Row>
+          <Col style={styles.column}>
+            <Image source={COURSE_LOGO} style={styles.logoImg} />
+            <Text style={styles.cardText}>{props.data.course}</Text>
+          </Col>
+          <Col style={styles.column}>
+            <Image source={BRANCH_LOGO} style={styles.logoImg} />
+            <Text style={styles.cardText}>{props.data.branch}</Text>
           </Col>
         </Row>
       </Grid>

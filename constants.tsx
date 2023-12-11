@@ -6,6 +6,8 @@ export type resultType2 =
       venue?: string;
       roomNo?: string;
       day?: string;
+      course?: string;
+      branch?: string;
     }
   | string;
 
