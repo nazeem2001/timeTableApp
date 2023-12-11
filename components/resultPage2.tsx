@@ -10,6 +10,7 @@ import CustomAaccordian from './customAccoordian';
 import {TopNavigationTitleShowcase} from './TopNav';
 import {Logo} from './logo';
 import * as Animatable from 'react-native-animatable';
+import DropShadow from 'react-native-drop-shadow';
 
 const ResultPage2 = ({navigation, route}: PageProps<'result2'>) => {
   const [modelData, setModelData] = React.useState<resultType2>({});
@@ -80,25 +81,42 @@ const ResultPage2 = ({navigation, route}: PageProps<'result2'>) => {
                     </Layout>
                   );
                 }
-                return (
-                  <TouchableOpacity
-                    key={Math.random()}
-                    onPress={() => {
-                      if (typeof period === 'object') {
-                        setActiveSections([]);
-                        setModelData(period);
-                        setModelVisble(true);
+                return typeof period === 'object' ? (
+                  <DropShadow style={styles.dropshadow}>
+                    <TouchableOpacity
+                      key={Math.random()}
+                      onPress={() => {
+                        if (typeof period === 'object') {
+                          setActiveSections([]);
+                          setModelData(period);
+                          setModelVisble(true);
+                        }
+                      }}
+                      style={
+                        period === 'null'
+                          ? styles.gridButtonInActive
+                          : styles.gridButtonActive
                       }
-                    }}
-                    style={{
-                      flex: 1,
-                      margin: '1%',
-                      marginBottom: 0,
-                      borderRadius: 10,
-                      backgroundColor:
-                        period === 'null' ? '#dcdedc' : '#ff4089',
-                    }}
-                  />
+                    />
+                  </DropShadow>
+                ) : (
+                  <View style={{flex: 1, margin: '.6%'}}>
+                    <TouchableOpacity
+                      key={Math.random()}
+                      onPress={() => {
+                        if (typeof period === 'object') {
+                          setActiveSections([]);
+                          setModelData(period);
+                          setModelVisble(true);
+                        }
+                      }}
+                      style={
+                        period === 'null'
+                          ? styles.gridButtonInActive
+                          : styles.gridButtonActive
+                      }
+                    />
+                  </View>
                 );
               })}
             </Layout>
@@ -148,9 +166,32 @@ export default ResultPage2;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    //
   },
+  dropshadow: {
+    flex: 1,
+    margin: '.6%',
+    shadowOffset: {width: 3, height: 3.5},
+    shadowColor: '#171717',
+    shadowOpacity: 0.9,
+    borderRadius: 10,
+  },
+  gridButtonActive: {
+    // elevation: 8,
+    flex: 1,
+    borderRadius: 10,
+    borderTopRightRadius: 15,
+
+    marginBottom: 0,
+    backgroundColor: '#ff4089',
+  },
+  gridButtonInActive: {
+    flex: 1,
+
+    marginBottom: 0,
+    borderRadius: 10,
+    backgroundColor: '#dcdedc',
+  },
+
   footerContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
