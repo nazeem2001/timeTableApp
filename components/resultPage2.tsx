@@ -11,6 +11,7 @@ import {TopNavigationTitleShowcase} from './TopNav';
 import {Logo} from './logo';
 import * as Animatable from 'react-native-animatable';
 import DropShadow from 'react-native-drop-shadow';
+import {ThemedButton} from 'react-native-really-awesome-button';
 
 const ResultPage2 = ({navigation, route}: PageProps<'result2'>) => {
   const [modelData, setModelData] = React.useState<resultType2>({});
@@ -52,53 +53,89 @@ const ResultPage2 = ({navigation, route}: PageProps<'result2'>) => {
               }}>
               {day.map((period, j) => {
                 if (i === 0 && j === 0) {
-                  return (
-                    <Layout
-                      style={{flex: 1, margin: '1%'}}
-                      key={Math.random()}
-                    />
-                  );
+                  return <Layout style={{flex: 1}} key={Math.random()} />;
                 }
                 if (j === 0 || i === 0) {
                   return (
-                    <Layout
+                    <View
                       key={Math.random()}
                       style={{
                         flex: 1,
-                        backgroundColor: '#f1efb3b8',
-                        margin: '1%',
-                        height: 28,
-                        borderRadius: 10,
+                        borderLeftWidth: j > 1 ? 1 : 0,
+                        marginBottom: 5,
+                        marginTop: 5,
                       }}>
-                      <Text
+                      <Layout
                         style={{
-                          marginTop: 6,
-                          textAlign: 'center',
-                          alignContent: 'center',
+                          flex: 1,
+                          alignSelf: 'center',
+                          height: 20,
+                          // backgroundColor: '#66d4ff',
+
+                          margin: '1%',
+                          borderColor: '#12296e',
+
+                          // borderRightWidth: j > 0 ? (j % 2 ? 0 : 1) : 0,
+                          borderRadius: 0,
                         }}>
-                        {period}
-                      </Text>
-                    </Layout>
+                        <Text
+                          style={{
+                            color: '#12296e',
+                            fontWeight: '700',
+                            // marginTop: 6,
+
+                            // marginHorizontal: i == 0 ? '10%' : 0,
+                            textAlign: 'center',
+                            alignContent: 'center',
+                          }}>
+                          {period}
+                        </Text>
+                      </Layout>
+                    </View>
                   );
                 }
                 return typeof period === 'object' ? (
-                  <DropShadow style={styles.dropshadow}>
-                    <TouchableOpacity
-                      key={Math.random()}
+                  // <DropShadow style={styles.dropshadow}>
+                  //   <TouchableOpacity
+                  //     key={Math.random()}
+                  //     onPress={() => {
+                  //       if (typeof period === 'object') {
+                  //         setActiveSections([]);
+                  //         setModelData(period);
+                  //         setModelVisble(true);
+                  //       }
+                  //     }}
+                  //     style={
+                  //       period === 'null'
+                  //         ? styles.gridButtonInActive
+                  //         : styles.gridButtonActive
+                  //     }
+                  //   />
+                  // </DropShadow>
+                  <View style={{flex: 1, margin: '.6%'}} key={Math.random()}>
+                    <ThemedButton
+                      name="rick"
+                      type="primary"
+                      backgroundColor="#ff4089"
+                      backgroundDarker="#660329"
+                      backgroundPlaceholder="#ff4089"
+                      animatedPlaceholder={false}
+                      raiseLevel={6}
+                      textSize={0}
+                      style={styles.gridButtonActive}
+                      springRelease
+                      width={'100%'}
+                      height={30}
                       onPress={() => {
                         if (typeof period === 'object') {
                           setActiveSections([]);
                           setModelData(period);
                           setModelVisble(true);
                         }
-                      }}
-                      style={
-                        period === 'null'
-                          ? styles.gridButtonInActive
-                          : styles.gridButtonActive
-                      }
-                    />
-                  </DropShadow>
+                      }}>
+                      lkk
+                    </ThemedButton>
+                  </View>
                 ) : (
                   <View style={{flex: 1, margin: '.6%'}}>
                     <TouchableOpacity
@@ -175,11 +212,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
   },
   gridButtonActive: {
-    flex: 1,
     borderRadius: 10,
     borderTopRightRadius: 12,
     marginBottom: 0,
-    backgroundColor: '#ff4089',
+    // backgroundColor: '#ff4089',
   },
   gridButtonInActive: {
     flex: 1,

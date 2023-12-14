@@ -184,7 +184,7 @@ export const HomeScreen = (props: PageProps<'Home'>) => {
       FacultyIndex,
       mode,
     });
-    if (mode === 1 || mode === 2) {
+    if (mode === 1 || mode === 2 || mode === 0) {
       if (DayIndex && TimeIndex && accYearIndex && semIndex) {
         if (YearIndex || branchIndex || courseIndex) {
           if (mode === 2) {
@@ -408,7 +408,11 @@ export const HomeScreen = (props: PageProps<'Home'>) => {
 
   return (
     <>
-      <TopNavigationTitleShowcase navigation={props} isLoading={isLoading} />
+      <TopNavigationTitleShowcase
+        navigation={props}
+        startup={startupSync}
+        isLoading={isLoading}
+      />
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,

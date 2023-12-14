@@ -1,4 +1,4 @@
-export const formNames = ['Form1', 'Form2'];
+export const formNames = ['Timetable', 'Faculty Work Load'];
 export type resultType2 =
   | {
       time?: string;

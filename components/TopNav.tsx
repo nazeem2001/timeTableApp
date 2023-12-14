@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   Avatar,
   Icon,
@@ -20,10 +20,12 @@ const MenuIcon = (props): IconElement => (
 const BackIcon = (props): IconElement => <Icon {...props} name="arrow-back" />;
 
 const editIcon = (props): IconElement => <Icon {...props} name="edit" />;
+const refreshIcon = (props): IconElement => <Icon {...props} name="refresh" />;
 
 export const TopNavigationTitleShowcase = ({
   navigation,
   isLoading,
+  startup,
 }): React.ReactElement => {
   const [menuVisible, setMenuVisible] = React.useState(false);
 
@@ -52,7 +54,9 @@ export const TopNavigationTitleShowcase = ({
   const renderOverflowMenuAction = (): React.ReactElement => (
     <>
       {isLoading && <Spinner size="small" status="success" />}
-      {isLoading}
+      {navigation.route.name === 'Home' && !isLoading && (
+        <TopNavigationAction icon={refreshIcon} onPress={startup} />
+      )}
       <OverflowMenu
         anchor={renderMenuAction}
         visible={menuVisible}
